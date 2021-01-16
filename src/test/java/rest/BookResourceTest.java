@@ -1,5 +1,7 @@
 package rest;
 
+import entities.Book;
+import entities.User;
 import utils.EMF_Creator;
 import io.restassured.RestAssured;
 import static io.restassured.RestAssured.given;
@@ -20,7 +22,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 //Uncomment the line below, to temporarily disable this test
-@Disabled
+
 
 public class BookResourceTest {
 
@@ -47,6 +49,41 @@ public class BookResourceTest {
         RestAssured.baseURI = SERVER_URL;
         RestAssured.port = SERVER_PORT;
         RestAssured.defaultParser = Parser.JSON;
+        EntityManager em = emf.createEntityManager();
+        
+        em.getTransaction().begin();
+        em.createNativeQuery("DELETE FROM user_roles").executeUpdate();
+        em.createNativeQuery("DELETE FROM roles").executeUpdate();
+        em.createNativeQuery("DELETE FROM LOAN").executeUpdate();
+        em.createNativeQuery("DELETE FROM BOOK").executeUpdate();
+        em.createNativeQuery("DELETE FROM users").executeUpdate();
+        em.getTransaction().commit();
+        
+        Book book = new Book(1, "testbog", "author", "gyldendal", "1999");
+        Book book2 = new Book(2, "tittle", "authgors", "publishergyld", "29123");
+        Book book3 = new Book(3, "testtest", "autrhorr", "gyldendal", "123123");
+        Book book4 = new Book(4, "lånmig", "jaja", "gylden", "12312");
+
+        User user = new User("user1", "andersen");
+
+        User user2 = new User("user2", "larsen");
+        long test = 1;
+//        book.addLoans(loan);
+//        book2.addLoans(loan2);
+//        user.addLoans(loan);
+//        user.addLoans(loan2);
+//        book2.setIsAvalible(false);
+//        book.setIsAvalible(false);
+        em.getTransaction().begin();
+        em.persist(user);
+        em.persist(user2);
+        em.persist(book);
+        em.persist(book2);
+        em.persist(book3);
+        em.persist(book4);
+        em.getTransaction().commit();
+        
+        
     }
 
     @AfterAll
@@ -78,7 +115,7 @@ public class BookResourceTest {
 
     @Test
     public void testServerIsUp() {
-        given().when().get("/info").then().statusCode(200);
+        given().when().get("/books").then().statusCode(200);
     }
 
     //This test assumes the database contains two rows
@@ -86,41 +123,18 @@ public class BookResourceTest {
     public void testDummyMsg() throws Exception {
         given()
                 .contentType("application/json")
-                .get("/info/").then()
+                .get("/books/").then()
                 .assertThat()
                 .statusCode(HttpStatus.OK_200.getStatusCode())
                 .body("msg", equalTo("Hello anonymous"));
     }
 
     
-    @Test
-    @Order(1)
-    public void testParrallel() throws Exception {
-        given()
-                .contentType("application/json")
-                .get("/info/parrallel").then()
-                .assertThat()
-                .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("peopleName", equalTo("Luke Skywalker"))
-                .body("planetName", equalTo("Yavin IV"))
-                .body("speciesName", equalTo("Ewok"))
-                .body("starshipName", equalTo("Star Destroyer"))
-                .body("vehicleName", equalTo("Sand Crawler"));
-
- 
-    }
-    @Test
-    @Order(2)
-    public void testCached() throws Exception {
-        given()
-                .contentType("application/json")
-                .get("/info/cached").then()            
-                .assertThat()
-                .statusCode(HttpStatus.OK_200.getStatusCode())
-                .body("peopleName", equalTo("Luke Skywalker"))
-                .body("planetName", equalTo("Yavin IV"))
-                .body("speciesName", equalTo("Ewok"))
-                .body("starshipName", equalTo("Star Destroyer"))
-                .body("vehicleName", equalTo("Sand Crawler"));
-    }
+    
+    
+    
+    
+    
+    
+    
 }

@@ -1,6 +1,7 @@
 package facades;
 
 import dto.BookDTO;
+import dto.LoanBookDTO;
 import dto.LoanDTO;
 import entities.Book;
 import entities.Loan;
@@ -89,44 +90,75 @@ public class BookFacade implements BookInterface {
     }
 
     @Override
-    public LoanDTO loanABook(long isbn, String userName) throws Exception {
+    public LoanDTO loanABook(LoanBookDTO loanBookDTO) throws Exception {
         EntityManager em = emf.createEntityManager();
-        
-        
-        
-        
+
         Loan loan = new Loan("DATODUMMY");
         Book book;
         User user;
         try {
-            book = em.find(Book.class, isbn);
+            book = em.find(Book.class, loanBookDTO.isbn);
 
             if (book == null) {
                 throw new Exception("Book not found");
             }
-            if(book.isIsAvalible()==false){
+            if (book.isIsAvalible() == false) {
                 throw new Exception("Book not avalible");
             }
-            
-            
-            
-            
-            user = em.find(User.class, userName);
-            
-            if(user == null){
+
+            user = em.find(User.class, loanBookDTO.userName);
+
+            if (user == null) {
                 throw new Exception("User not found");
             }
-        book.addLoans(loan);
-        user.addLoans(loan);
-        book.setIsAvalible(false);
-        em.getTransaction().begin();
-        em.persist(loan);
-        em.getTransaction().commit();
-        
+            book.addLoans(loan);
+            user.addLoans(loan);
+            book.setIsAvalible(false);
+            em.getTransaction().begin();
+            em.persist(loan);
+            em.getTransaction().commit();
+
         } finally {
             em.close();
         }
         return new LoanDTO(loan);
+    }
+
+    @Override
+    public BookDTO addBook(BookDTO bookDTO) {
+
+        EntityManager em = emf.createEntityManager();
+        Book book = new Book(bookDTO.isbn, bookDTO.title, bookDTO.authors, bookDTO.publisher, bookDTO.publishYear);
+        try {
+
+            em.getTransaction().begin();
+            em.persist(book);
+
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+        return new BookDTO(book);
+    }
+
+    @Override
+    public BookDTO removeBook(BookDTO bookDTO) {
+        EntityManager em = emf.createEntityManager();
+        Book book;
+        try {
+            book = em.find(Book.class, bookDTO.isbn);
+            em.getTransaction().begin();
+
+            for (Loan loan : book.getLoans()) {
+                em.remove(loan);
+            }
+
+            em.remove(book);
+            em.getTransaction().commit();
+        } finally {
+            em.close();
+        }
+        return new BookDTO(book);
     }
 
 }

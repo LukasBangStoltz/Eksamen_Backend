@@ -6,6 +6,7 @@
 package utils;
 
 import dto.BookDTO;
+import dto.LoanBookDTO;
 import dto.LoanDTO;
 import java.util.List;
 
@@ -19,6 +20,10 @@ public interface BookInterface {
 
     public abstract BookDTO getBookByIsbn(long isbn)throws Exception;
 
-    public abstract LoanDTO loanABook(long isbn, String userName) throws Exception;
+    public abstract LoanDTO loanABook(LoanBookDTO loanBookDTO) throws Exception;
+    
+    public abstract BookDTO addBook(BookDTO bookDTO);
+    
+    public abstract BookDTO removeBook(BookDTO bookDTO);
 
 }

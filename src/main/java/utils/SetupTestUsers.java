@@ -26,9 +26,9 @@ public class SetupTestUsers {
     User user = new User("user", "testuser");
     User admin = new User("admin", "testadmin");
     User both = new User("user_admin", "testuseradmin");
-    Book book1 = new Book("BogTitle", "Jens", "gyldenlal", "1992");
-    Book book2 = new Book("BogTitle2", "Jens2", "gyldenlal2", "19922");
-    Book book3 = new Book("BogTitle3", "Jens3", "gyldenlal3", "19923");
+    Book book1 = new Book(1, "BogTitle", "Jens", "gyldenlal", "1992");
+    Book book2 = new Book(2, "BogTitle2", "Jens2", "gyldenlal2", "19922");
+    Book book3 = new Book(3, "BogTitle3", "Jens3", "gyldenlal3", "19923");
 
     Loan loan1 = new Loan("Dummy1");
     Loan loan2 = new Loan("Dummy2");

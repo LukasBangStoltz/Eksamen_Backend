@@ -79,6 +79,14 @@ public class User implements Serializable {
         
     }
     
+    public void removeLoans(Loan loan){
+        if(loan!= null){
+            this.loans.remove(loan);
+            loan.setUser(null);
+        }
+    }
+    
+    
     public String getUserName() {
         return userName;
     }
