@@ -5,12 +5,8 @@
  */
 package entities;
 
-import com.nimbusds.jwt.util.DateUtils;
 import java.io.Serializable;
-import java.time.LocalDate;
-import static java.util.Calendar.HOUR;
 import java.util.Date;
-import javafx.util.converter.LocalDateStringConverter;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -36,18 +32,10 @@ public class Loan implements Serializable {
     @Temporal(TemporalType.DATE)
     private Date dueDate;
     private String returnedDate;
-    
-    
-            
-    
-    
-    
+
     @ManyToOne
     private Book book;
 
-    
-    
-    
     @ManyToOne
     private User user;
 
