@@ -149,11 +149,12 @@ public class BookFacade implements BookInterface {
     }
 
     @Override
-    public BookDTO removeBook(BookDTO bookDTO) {
+    public BookDTO removeBook(long isbn) {
+        System.out.println("TESTTEST");
         EntityManager em = emf.createEntityManager();
         Book book;
         try {
-            book = em.find(Book.class, bookDTO.isbn);
+            book = em.find(Book.class, isbn);
             em.getTransaction().begin();
 
             for (Loan loan : book.getLoans()) {

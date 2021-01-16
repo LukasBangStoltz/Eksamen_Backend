@@ -114,12 +114,12 @@ em.getTransaction().begin();
         assertEquals("title", newBook.title);
 
     }
-
-    @Test
-    public void testRemoveBook() {
-
-        BookDTO bookDTO = facade.removeBook(new BookDTO(book));
-
-        assertEquals(bookDTO.isbn, 1);
-    }
+@Test
+public void testRemoveBook(){
+    BookDTO book = facade.removeBook(2);
+    
+    assertEquals(book.title, "tittle");
+    
+}
+   
 }

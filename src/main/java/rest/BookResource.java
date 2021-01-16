@@ -20,6 +20,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
@@ -116,44 +117,53 @@ public class BookResource {
         return GSON.toJson(book);
 
     }
-    
-    
+
     @Path("loan")
     @PUT
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response LoanABook(String book) throws Exception{
-        
+    public Response LoanABook(String book) throws Exception {
+
         LoanBookDTO loanBook = GSON.fromJson(book, LoanBookDTO.class);
-        
+
         LoanDTO loan = FACADE.loanABook(loanBook);
-        
+
         return Response.ok(GSON.toJson(loan)).build();
     }
-    
+
     @Path("add")
     @POST
     @Produces({MediaType.APPLICATION_JSON})
     @Consumes(MediaType.APPLICATION_JSON)
-    public Response addBook(String book) throws Exception{
-        
+    public Response addBook(String book) throws Exception {
+
         BookDTO bookDTO = GSON.fromJson(book, BookDTO.class);
-        
+
         BookDTO newBook = FACADE.addBook(bookDTO);
-        
+
         return Response.ok(GSON.toJson(newBook)).build();
     }
-    
+
     @Path("myloans/{userName}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public String getMyLoans(@PathParam("userName") String userName) throws Exception {
 
         List<LoanDTO> loanList = FACADE.getAllLoans(userName);
-        
+
         return GSON.toJson(loanList);
 
     }
-    
-    
+
+    @DELETE
+    @Path("remove/{isbn}")
+    @Produces({MediaType.APPLICATION_JSON})
+    public String removeBook(@PathParam("isbn") long isbn) throws Exception {
+        System.out.println("YALAAAAAAA");
+        BookDTO newBook = FACADE.removeBook(isbn);
+        
+        
+        return "hej";
+    }
+
 }
