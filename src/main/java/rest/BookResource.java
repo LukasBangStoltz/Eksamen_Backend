@@ -84,7 +84,7 @@ public class BookResource {
         return "{\"msg\": \"Hello to (admin) User: " + thisuser + "\"}";
     }
 
-    @Path("setUpUsers")
+    @Path("setupusers")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public void setUpUsers() {
