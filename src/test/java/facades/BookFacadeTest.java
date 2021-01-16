@@ -1,7 +1,6 @@
 package facades;
 
 import utils.EMF_Creator;
-import entities.RenameMe;
 import entities.Role;
 import entities.User;
 import javax.persistence.EntityManager;
@@ -17,21 +16,21 @@ import security.errorhandling.AuthenticationException;
 
 //Uncomment the line below, to temporarily disable this test
 @Disabled
-public class FacadeExampleTest {
+public class BookFacadeTest {
 
     private static EntityManagerFactory emf;
-    private static UserFacade facade;
+    private static BookFacade facade;
     private static User user;
     private static User admin;
     private static User both;
 
-    public FacadeExampleTest() {
+    public BookFacadeTest() {
     }
 
     @BeforeAll
     public static void setUpClass() {
        emf = EMF_Creator.createEntityManagerFactoryForTest();
-       facade = UserFacade.getUserFacade(emf);
+       facade = BookFacade.getBookFacade(emf);
     }
 
     @AfterAll
@@ -47,8 +46,6 @@ public class FacadeExampleTest {
         try {
             em.getTransaction().begin();
             //Delete existing users and roles to get a "fresh" database
-            em.createQuery("delete from User").executeUpdate();
-            em.createQuery("delete from Role").executeUpdate();
 
             Role userRole = new Role("user");
             Role adminRole = new Role("admin");
