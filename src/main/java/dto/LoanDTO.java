@@ -6,6 +6,7 @@
 package dto;
 
 import entities.Loan;
+import java.util.Date;
 
 /**
  *
@@ -13,8 +14,8 @@ import entities.Loan;
  */
 public class LoanDTO {
 
-    public String checkoutDate;
-    public String dueDate;
+    public Date checkoutDate;
+    public Date dueDate;
     public String returnedDate;
     
     
