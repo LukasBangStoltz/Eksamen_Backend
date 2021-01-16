@@ -35,12 +35,15 @@ public class Tester {
         User user = new User("user1", "andersen");
 
         User user2 = new User("user2", "larsen");
-//        book.addLoans(loan);
-//        book2.addLoans(loan2);
-//        user.addLoans(loan);
-//        user.addLoans(loan2);
-//        book2.setIsAvalible(false);
-//        book.setIsAvalible(false);
+        
+        Loan loan = new Loan("Dymmt");
+        Loan loan2 = new Loan("Dymmt");
+        
+        
+        book.addLoans(loan);
+        book2.addLoans(loan2);
+        user.addLoans(loan);
+        user.addLoans(loan2);
         em.getTransaction().begin();
         em.persist(user);
         em.persist(user2);
@@ -50,10 +53,8 @@ public class Tester {
         em.persist(book4);
         em.getTransaction().commit();
 
-        Book book5 = new Book(4, "Virk", "nu", "su", "mig");
-
-        BookDTO dto = bookFacade.addBook(new BookDTO(book5));
-
+        List<LoanDTO> loanList = bookFacade.getAllLoans(user.getUserName());
+        System.out.println(loanList);
 //        BookDTO getBook = bookFacade.getBookByIsbn(1);
 //        
 //        

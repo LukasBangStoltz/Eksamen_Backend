@@ -168,4 +168,25 @@ public class BookFacade implements BookInterface {
         return new BookDTO(book);
     }
 
+    @Override
+    public List<LoanDTO> getAllLoans(String userName) {
+        EntityManager em = emf.createEntityManager();
+        List<LoanDTO> loanListDTO = new ArrayList();
+        List<Loan> loanList = new ArrayList();
+        try {
+
+            Query query = em.createQuery("SELECT l FROM Loan l JOIN l.user u WHERE u.userName = :userName", Loan.class);
+            query.setParameter("userName", userName);
+            loanList = query.getResultList();
+
+            for (Loan loan : loanList) {
+                loanListDTO.add(new LoanDTO(loan));
+            }
+
+        } finally {
+            em.close();
+        }
+        return loanListDTO;
+    }
+
 }
