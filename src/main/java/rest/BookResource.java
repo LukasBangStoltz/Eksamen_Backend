@@ -2,7 +2,9 @@ package rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import dto.BookDTO;
 import entities.User;
+import facades.BookFacade;
 import facades.FacadeExample;
 import java.io.IOException;
 import java.util.List;
@@ -27,12 +29,12 @@ import utils.SetupTestUsers;
 /**
  * @author lam@cphbusiness.dk
  */
-@Path("info")
-public class DemoResource {
-    
+@Path("books")
+public class BookResource {
+
     private static final EntityManagerFactory EMF = EMF_Creator.createEntityManagerFactory();
     private static final ExecutorService ES = Executors.newCachedThreadPool();
-    private static final FacadeExample FACADE = FacadeExample.getFacadeExample(EMF);
+    private static final BookFacade FACADE = BookFacade.getBookFacade(EMF);
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static String cachedResponse;
     @Context
@@ -55,7 +57,7 @@ public class DemoResource {
 
         EntityManager em = EMF.createEntityManager();
         try {
-            TypedQuery<User> query = em.createQuery ("select u from User u",entities.User.class);
+            TypedQuery<User> query = em.createQuery("select u from User u", entities.User.class);
             List<User> users = query.getResultList();
             return "[" + users.size() + "]";
         } finally {
@@ -80,48 +82,21 @@ public class DemoResource {
         String thisuser = securityContext.getUserPrincipal().getName();
         return "{\"msg\": \"Hello to (admin) User: " + thisuser + "\"}";
     }
-    
-    @Path("parrallel")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public String getStarWarsParrallel() throws InterruptedException, ExecutionException, TimeoutException {
-        String result = fetcher.StarWarsFetcher.responseFromExternalServersParrallel(ES, GSON);
-        cachedResponse = result;
-        return result;
-    }
 
-    @Path("cached")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public String getStarWarsCached() throws InterruptedException, ExecutionException, TimeoutException {
-        return cachedResponse;
-    }
-    
     @Path("setUpUsers")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
     public void setUpUsers() {
         SetupTestUsers.setUpUsers();
     }
-    
-    @Path("planets")
+
+    @Path("allbooks")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String getPlanets() throws InterruptedException, ExecutionException, TimeoutException, IOException {
-        String result = fetcher.StarWarsPlanetFetcher.responseFromExternalServersSequential(ES, GSON);
-        cachedResponse = result;
-        return result;
+    public String getAllBooks() {
+        List<BookDTO> bookList = FACADE.getAllBooks();
+        
+        return GSON.toJson(bookList);
     }
-    
-    @Path("countries")
-    @GET
-    @Produces({MediaType.APPLICATION_JSON})
-    public String getCountries() throws InterruptedException, ExecutionException, TimeoutException, IOException {
-        String result = fetcher.CountriesFetcher.responseFromExternalServersSequential(ES, GSON);
-        cachedResponse = result;
-        return result;
-    }
-    
-    
-    
+
 }
