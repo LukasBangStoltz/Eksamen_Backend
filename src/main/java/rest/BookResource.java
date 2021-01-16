@@ -106,11 +106,11 @@ public class BookResource {
         return GSON.toJson(bookList);
     }
 
-    @Path("book/{isbn}")
+    @Path("book/{title}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String getBookByIsbn(@PathParam("isbn") long isbn) throws Exception {
-        BookDTO book = FACADE.getBookByIsbn(isbn);
+    public String getBookByIsbn(@PathParam("title") String name) throws Exception {
+        BookDTO book = FACADE.getBookByTitle(name);
 
         return GSON.toJson(book);
 

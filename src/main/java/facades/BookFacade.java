@@ -72,15 +72,22 @@ public class BookFacade implements BookInterface {
     }
 
     @Override
-    public BookDTO getBookByIsbn(long isbn) throws Exception {
+    public BookDTO getBookByTitle(String title) throws Exception {
         EntityManager em = emf.createEntityManager();
         Book book;
 
         try {
-            book = em.find(Book.class, isbn);
 
+            try {
+
+                Query query = em.createQuery("SELECT b FROM Book b WHERE b.title= :title");
+                query.setParameter("title", title);
+                book = (Book) query.getSingleResult();
+            } catch (Exception e) {
+                book = null;
+            }
             if (book == null) {
-                throw new Exception("Book not found");
+                book = new Book(0, "No books with given name", "", "", "");
             }
 
         } finally {
