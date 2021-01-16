@@ -3,6 +3,8 @@ package rest;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import dto.BookDTO;
+import dto.LoanBookDTO;
+import dto.LoanDTO;
 import entities.User;
 import facades.BookFacade;
 import facades.FacadeExample;
@@ -16,13 +18,17 @@ import javax.annotation.security.RolesAllowed;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.TypedQuery;
+import javax.ws.rs.Consumes;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.SecurityContext;
 import utils.EMF_Creator;
 import utils.SetupTestUsers;
@@ -96,7 +102,7 @@ public class BookResource {
     @Produces({MediaType.APPLICATION_JSON})
     public String getAllBooks() {
         List<BookDTO> bookList = FACADE.getAllBooks();
-
+        System.out.println("LSOASDLAWLDLAWDL--_____*****");
         return GSON.toJson(bookList);
     }
 
@@ -108,6 +114,20 @@ public class BookResource {
 
         return GSON.toJson(book);
 
+    }
+    
+    
+    @Path("loan")
+    @PUT
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response LoanABook(String book) throws Exception{
+        
+        LoanBookDTO loanBook = GSON.fromJson(book, LoanBookDTO.class);
+        
+        LoanDTO loan = FACADE.loanABook(loanBook);
+        
+        return Response.ok(GSON.toJson(loan)).build();
     }
 
 }

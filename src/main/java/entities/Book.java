@@ -24,20 +24,19 @@ public class Book implements Serializable {
 
     private static final long serialVersionUID = 1L;
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long isbn;
     private String title;
-    
+
     private String authors;
     private String publisher;
     private String publishYear;
     private boolean isAvalible;
-    
-    
+
     @OneToMany(mappedBy = "book")
     private List<Loan> loans;
 
-    public Book(String title, String authors, String publisher, String publishYear  ) {
+    public Book(long isbn, String title, String authors, String publisher, String publishYear) {
+        this.isbn = isbn;
         this.title = title;
         this.authors = authors;
         this.publisher = publisher;
@@ -94,12 +93,18 @@ public class Book implements Serializable {
     }
 
     public void addLoans(Loan loan) {
-        if(loan!=null){
+        if (loan != null) {
             this.loans.add(loan);
             loan.setBook(this);
         }
-        
-        
+
+    }
+
+    public void removeLoans(Loan loan) {
+        if (loan != null) {
+            this.loans.remove(loan);
+            loan.setBook(null);
+        }
     }
 
     public boolean isIsAvalible() {
@@ -109,6 +114,5 @@ public class Book implements Serializable {
     public void setIsAvalible(boolean isAvalible) {
         this.isAvalible = isAvalible;
     }
-    
-    
+
 }
