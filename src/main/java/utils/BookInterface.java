@@ -25,5 +25,7 @@ public interface BookInterface {
     public abstract BookDTO addBook(BookDTO bookDTO);
     
     public abstract BookDTO removeBook(BookDTO bookDTO);
+   
+    public abstract List<LoanDTO> getAllLoans(String userName);
 
 }

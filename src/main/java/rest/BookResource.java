@@ -5,6 +5,7 @@ import com.google.gson.GsonBuilder;
 import dto.BookDTO;
 import dto.LoanBookDTO;
 import dto.LoanDTO;
+import entities.Book;
 import entities.User;
 import facades.BookFacade;
 import facades.FacadeExample;
@@ -129,5 +130,30 @@ public class BookResource {
         
         return Response.ok(GSON.toJson(loan)).build();
     }
+    
+    @Path("add")
+    @POST
+    @Produces({MediaType.APPLICATION_JSON})
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response addBook(String book) throws Exception{
+        
+        BookDTO bookDTO = GSON.fromJson(book, BookDTO.class);
+        
+        BookDTO newBook = FACADE.addBook(bookDTO);
+        
+        return Response.ok(GSON.toJson(newBook)).build();
+    }
+    
+    @Path("myloans/{userName}")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getMyLoans(@PathParam("userName") String userName) throws Exception {
 
+        List<LoanDTO> loanList = FACADE.getAllLoans(userName);
+        
+        return GSON.toJson(loanList);
+
+    }
+    
+    
 }
