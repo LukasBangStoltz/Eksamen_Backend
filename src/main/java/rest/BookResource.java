@@ -21,6 +21,7 @@ import javax.ws.rs.core.UriInfo;
 import javax.ws.rs.Produces;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.SecurityContext;
 import utils.EMF_Creator;
@@ -95,8 +96,18 @@ public class BookResource {
     @Produces({MediaType.APPLICATION_JSON})
     public String getAllBooks() {
         List<BookDTO> bookList = FACADE.getAllBooks();
-        
+
         return GSON.toJson(bookList);
+    }
+
+    @Path("book/{isbn}")
+    @GET
+    @Produces({MediaType.APPLICATION_JSON})
+    public String getBookByIsbn(@PathParam("isbn") long isbn) throws Exception {
+        BookDTO book = FACADE.getBookByIsbn(isbn);
+
+        return GSON.toJson(book);
+
     }
 
 }

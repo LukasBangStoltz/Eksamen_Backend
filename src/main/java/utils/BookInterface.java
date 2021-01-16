@@ -17,8 +17,8 @@ public interface BookInterface {
 
     public abstract List<BookDTO> getAllBooks();
 
-    public abstract BookDTO getBookByIsbn(long isbn);
+    public abstract BookDTO getBookByIsbn(long isbn)throws Exception;
 
-    public abstract LoanDTO loanABook(long isbn);
+    public abstract LoanDTO loanABook(long isbn, String userName) throws Exception;
 
 }

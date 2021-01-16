@@ -37,13 +37,13 @@ public class Book implements Serializable {
     @OneToMany(mappedBy = "book")
     private List<Loan> loans;
 
-    public Book(String title, String authors, String publisher, String publishYear, boolean  isAvalible) {
+    public Book(String title, String authors, String publisher, String publishYear  ) {
         this.title = title;
         this.authors = authors;
         this.publisher = publisher;
         this.publishYear = publishYear;
         this.loans = new ArrayList<>();
-        this.isAvalible = isAvalible;
+        this.isAvalible = true;
     }
 
     public Book() {

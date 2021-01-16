@@ -6,12 +6,15 @@
 package entities;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
+import javax.persistence.Temporal;
+import javax.persistence.TemporalType;
 
 /**
  *
@@ -24,9 +27,10 @@ public class Loan implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String checkoutDate;
-    private String dueDate;
+    @Temporal(TemporalType.DATE)
+    private Date checkoutDate;
+    @Temporal(TemporalType.DATE)
+    private Date dueDate;
     private String returnedDate;
 
     @ManyToOne
@@ -35,11 +39,11 @@ public class Loan implements Serializable {
     @ManyToOne
     private User user;
 
-    public Loan(String checkoutDate, String dueDate, String returnedDate) {
-        this.checkoutDate = checkoutDate;
-        this.dueDate = dueDate;
+    public Loan(String returnedDate) {
+        this.checkoutDate = new Date();
+        this.dueDate = new Date(checkoutDate.getTime() + 604800000);
         this.returnedDate = returnedDate;
-        
+
     }
 
     public Loan() {
@@ -53,19 +57,19 @@ public class Loan implements Serializable {
         this.id = id;
     }
 
-    public String getCheckoutDate() {
+    public Date getCheckoutDate() {
         return checkoutDate;
     }
 
-    public void setCheckoutDate(String checkoutDate) {
+    public void setCheckoutDate(Date checkoutDate) {
         this.checkoutDate = checkoutDate;
     }
 
-    public String getDueDate() {
+    public Date getDueDate() {
         return dueDate;
     }
 
-    public void setDueDate(String dueDate) {
+    public void setDueDate(Date dueDate) {
         this.dueDate = dueDate;
     }
 
@@ -93,7 +97,4 @@ public class Loan implements Serializable {
         this.user = user;
     }
 
-    
-    
-    
 }
