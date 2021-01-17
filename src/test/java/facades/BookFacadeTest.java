@@ -1,11 +1,14 @@
 package facades;
 
 import dto.BookDTO;
+import dto.LoanBookDTO;
+import dto.LoanDTO;
 import entities.Book;
 import entities.Loan;
 import utils.EMF_Creator;
 import entities.Role;
 import entities.User;
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import org.junit.jupiter.api.AfterAll;
@@ -14,6 +17,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import security.errorhandling.AuthenticationException;
 
@@ -40,13 +44,13 @@ public class BookFacadeTest {
         EntityManager em = emf.createEntityManager();
         try {
             //Delete existing users and roles to get a "fresh" database
-em.getTransaction().begin();
-        em.createNativeQuery("DELETE FROM user_roles").executeUpdate();
-        em.createNativeQuery("DELETE FROM roles").executeUpdate();
-        em.createNativeQuery("DELETE FROM LOAN").executeUpdate();
-        em.createNativeQuery("DELETE FROM BOOK").executeUpdate();
-        em.createNativeQuery("DELETE FROM users").executeUpdate();
-        em.getTransaction().commit();
+            em.getTransaction().begin();
+            em.createNativeQuery("DELETE FROM user_roles").executeUpdate();
+            em.createNativeQuery("DELETE FROM roles").executeUpdate();
+            em.createNativeQuery("DELETE FROM LOAN").executeUpdate();
+            em.createNativeQuery("DELETE FROM BOOK").executeUpdate();
+            em.createNativeQuery("DELETE FROM users").executeUpdate();
+            em.getTransaction().commit();
             book = new Book(1, "testbog", "author", "gyldendal", "1999");
             book2 = new Book(2, "tittle", "authgors", "publishergyld", "29123");
             book3 = new Book(3, "testtest", "autrhorr", "gyldendal", "123123");
@@ -55,16 +59,14 @@ em.getTransaction().begin();
             User user = new User("user1", "andersen");
 
             User user2 = new User("user2", "larsen");
-            long test = 1;
 
             Loan loan1 = new Loan("DUMMY1");
             Loan loan2 = new Loan("DUMMY2");
             Loan loan3 = new Loan("DUMMY3");
-            
-            
+
             book.addLoans(loan1);
             user.addLoans(loan1);
-            
+
             em.getTransaction().begin();
             em.persist(user);
             em.persist(user2);
@@ -114,12 +116,43 @@ em.getTransaction().begin();
         assertEquals("title", newBook.title);
 
     }
-@Test
-public void testRemoveBook(){
-    BookDTO book = facade.removeBook(2);
-    
-    assertEquals(book.title, "tittle");
-    
-}
-   
+
+    @Test
+    public void testRemoveBook() {
+        BookDTO book = facade.removeBook(2);
+
+        assertEquals(book.title, "tittle");
+
+    }
+
+    @Test
+    public void testGetAllBooks() {
+        List<BookDTO> bookList = facade.getAllBooks();
+
+        assertEquals(5, bookList.size());
+    }
+
+    @Test
+    public void testGetBookByTitle() throws Exception {
+        BookDTO book = facade.getBookByTitle("testbog");
+
+        assertEquals("testbog", book.title);
+    }
+
+    @Test
+    public void testLoanABook() throws Exception {
+
+        LoanBookDTO loanBook = new LoanBookDTO(3, "user1");
+
+        LoanDTO loan = facade.loanABook(loanBook);
+
+        assertEquals("DATODUMMY", loan.returnedDate);
+    }
+
+    @Test
+    public void testGetAllLoans() {
+        List<LoanDTO> loans = facade.getAllLoans("user1");
+
+        assertEquals(2, loans.size());
+    }
 }

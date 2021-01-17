@@ -22,7 +22,7 @@ import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import utils.EMF_Creator;
 
-@Disabled
+
 public class LoginEndpointTest {
 
     private static final int SERVER_PORT = 7777;
@@ -66,8 +66,11 @@ public class LoginEndpointTest {
         try {
             em.getTransaction().begin();
             //Delete existing users and roles to get a "fresh" database
-            em.createQuery("delete from User").executeUpdate();
-            em.createQuery("delete from Role").executeUpdate();
+            em.createNativeQuery("DELETE FROM user_roles").executeUpdate();
+            em.createNativeQuery("DELETE FROM roles").executeUpdate();
+            em.createNativeQuery("DELETE FROM LOAN").executeUpdate();
+            em.createNativeQuery("DELETE FROM BOOK").executeUpdate();
+            em.createNativeQuery("DELETE FROM users").executeUpdate();
 
             Role userRole = new Role("user");
             Role adminRole = new Role("admin");
@@ -112,7 +115,7 @@ public class LoginEndpointTest {
 
     @Test
     public void serverIsRunning() {
-        given().when().get("/info").then().statusCode(200);
+        given().when().get("/books").then().statusCode(200);
     }
 
     @Test
@@ -120,7 +123,7 @@ public class LoginEndpointTest {
         given()
                 .contentType("application/json")
                 .when()
-                .get("/info/").then()
+                .get("/books/").then()
                 .statusCode(200)
                 .body("msg", equalTo("Hello anonymous"));
     }
@@ -133,7 +136,7 @@ public class LoginEndpointTest {
                 .accept(ContentType.JSON)
                 .header("x-access-token", securityToken)
                 .when()
-                .get("/info/admin").then()
+                .get("/books/admin").then()
                 .statusCode(200)
                 .body("msg", equalTo("Hello to (admin) User: admin"));
     }
@@ -145,7 +148,7 @@ public class LoginEndpointTest {
                 .contentType("application/json")
                 .header("x-access-token", securityToken)
                 .when()
-                .get("/info/user").then()
+                .get("/books/user").then()
                 .statusCode(200)
                 .body("msg", equalTo("Hello to User: user"));
     }
@@ -157,7 +160,7 @@ public class LoginEndpointTest {
                 .contentType("application/json")
                 .header("x-access-token", securityToken)
                 .when()
-                .get("/info/admin").then() //Call Admin endpoint as user
+                .get("/books/admin").then() //Call Admin endpoint as user
                 .statusCode(401);
     }
 
@@ -168,7 +171,7 @@ public class LoginEndpointTest {
                 .contentType("application/json")
                 .header("x-access-token", securityToken)
                 .when()
-                .get("/info/user").then() //Call User endpoint as Admin
+                .get("/books/user").then() //Call User endpoint as Admin
                 .statusCode(401);
     }
 
@@ -180,7 +183,7 @@ public class LoginEndpointTest {
                 .accept(ContentType.JSON)
                 .header("x-access-token", securityToken)
                 .when()
-                .get("/info/admin").then()
+                .get("/books/admin").then()
                 .statusCode(200)
                 .body("msg", equalTo("Hello to (admin) User: user_admin"));
     }
@@ -192,7 +195,7 @@ public class LoginEndpointTest {
                 .contentType("application/json")
                 .header("x-access-token", securityToken)
                 .when()
-                .get("/info/user").then()
+                .get("/books/user").then()
                 .statusCode(200)
                 .body("msg", equalTo("Hello to User: user_admin"));
     }
@@ -203,7 +206,7 @@ public class LoginEndpointTest {
         given()
                 .contentType("application/json")
                 .when()
-                .get("/info/user").then()
+                .get("/books/user").then()
                 .statusCode(403)
                 .body("code", equalTo(403))
                 .body("message", equalTo("Not authenticated - do login"));
@@ -215,7 +218,7 @@ public class LoginEndpointTest {
         given()
                 .contentType("application/json")
                 .when()
-                .get("/info/user").then()
+                .get("/books/user").then()
                 .statusCode(403)
                 .body("code", equalTo(403))
                 .body("message", equalTo("Not authenticated - do login"));
