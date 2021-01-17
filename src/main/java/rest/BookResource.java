@@ -111,7 +111,7 @@ public class BookResource {
     @Path("book/{title}")
     @GET
     @Produces({MediaType.APPLICATION_JSON})
-    public String getBookByIsbn(@PathParam("title") String name) throws Exception {
+    public String getBookByTitle(@PathParam("title") String name) throws Exception {
         BookDTO book = FACADE.getBookByTitle(name);
 
         return GSON.toJson(book);
@@ -163,7 +163,7 @@ public class BookResource {
         BookDTO newBook = FACADE.removeBook(isbn);
         
         
-        return "hej";
+        return "{\"msg\":\"Book removed!\"}";
     }
 
 }
